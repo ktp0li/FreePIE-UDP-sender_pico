@@ -1,0 +1,6 @@
+[submodule "micropython/micropython-mpu9x50"]
+	path = micropython/micropython-mpu9x50
+	url = https://github.com/micropython-IMU/micropython-mpu9x50
+[submodule "micropython/micropy-ENC28J60"]
+	path = micropython/micropy-ENC28J60
+	url = https://github.com/przemobe/micropy-ENC28J60
