@@ -8,6 +8,7 @@ import Ntw
 import time
 import ustruct
 from imu import MPU6050
+from fusion import Fusion
 
 
 class PeriodicUdpSender:
@@ -58,12 +59,13 @@ class PeriodicUdpSender:
 
 def create_packet():
     bin_values = []
-    name = ['accel_xyz', 'gyro_xyz', 'magnet_xyz']
-    resources = [imu.accel.xyz, imu.gyro.xyz, [0, 0, 0]]
+    name = ['yaw', 'pitch', 'roll']
+    fuse.update_nomag(imu.accel.xyz, imu.gyro.xyz)
+    resources = [fuse.heading, fuse.pitch, fuse.roll]
     # encode values
-    for comment, values in zip(name, resources):
+    for comment, value in zip(name, resources):
         # print(f'{comment}:', *[k for k in values])
-        bin_values.extend([ustruct.pack('f', k) for k in values])
+        bin_values.append(ustruct.pack('f', value))
     bin_string = flag + b''.join(bin_values)
     return bin_string
 
@@ -76,13 +78,14 @@ if __name__ == '__main__':
 
     # create MPU6050 object
     imu = MPU6050(I2C(0, sda=Pin(0), scl=Pin(1), freq=400000))
-    flag = b'\x00\x01'
+    fuse = Fusion()
+    flag = b'\x00\x02'
 
     # Set static IP address
     ntw.setIPv4([192,168,100,2], [255,255,255,252], [192,168,100,1])
 
     # Create periodic sender
-    sender = PeriodicUdpSender(ntw, [192,168,1,46], 5555, 0.5)
+    sender = PeriodicUdpSender(ntw, [192,168,1,148], 5555, 0.5)
 
     while True:
         ntw.rxAllPkt()

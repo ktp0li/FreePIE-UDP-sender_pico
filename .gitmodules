@@ -4,3 +4,6 @@
 [submodule "micropython/micropy-ENC28J60"]
 	path = micropython/micropy-ENC28J60
 	url = https://github.com/przemobe/micropy-ENC28J60
+[submodule "micropython/micropython-fusion"]
+	path = micropython/micropython-fusion
+	url = https://github.com/micropython-IMU/micropython-fusion
